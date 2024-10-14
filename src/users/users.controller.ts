@@ -6,12 +6,22 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiConflictResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateReqUserDto } from './dto/request/create-req-user.dto';
+import { UpdateReqUserDto } from './dto/request/update-req-user.dto';
+import { UserListReqDto } from './dto/request/user-list.req.dto';
+import { UserResDto } from './dto/response/user.res.dto';
 import { UsersService } from './users.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -19,13 +29,20 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  @ApiConflictResponse({ description: 'Conflict' })
+  @ApiOperation({ summary: 'Create user', description: 'Create a new user' })
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  public async create(
+    @Body() createUserDto: CreateReqUserDto,
+    @Query() query: UserListReqDto,
+  ): Promise<UserResDto> {
+    return await this.usersService.create(createUserDto, query);
   }
 
   @Get()
-  findAll() {
+  findAll(@Query() query: UserListReqDto) {
     return this.usersService.findAll();
   }
 
@@ -35,7 +52,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateReqUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
