@@ -1,7 +1,7 @@
-export class UserResDto {
-  id: string;
-  name: number;
+export class UserBaseReqDto {
+  name: string;
   age?: number;
   email: string;
   role: string;
+  password: string;
 }

@@ -22,6 +22,7 @@ import { UpdateReqUserDto } from './dto/request/update-req-user.dto';
 import { UserListReqDto } from './dto/request/user-list.req.dto';
 import { UserResDto } from './dto/response/user.res.dto';
 import { UsersService } from './users.service';
+import { UserShorResDto } from './dto/response/user-shor.res.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -29,8 +30,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiForbiddenResponse({ description: 'Forbidden' })
-  @ApiNotFoundResponse({ description: 'Not Found' })
   @ApiConflictResponse({ description: 'Conflict' })
   @ApiOperation({ summary: 'Create user', description: 'Create a new user' })
   @Post()

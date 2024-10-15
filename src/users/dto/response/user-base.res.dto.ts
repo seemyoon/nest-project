@@ -1,4 +1,4 @@
-export class UserResDto {
+export class UserResBaseDto {
   id: string;
   name: number;
   age?: number;

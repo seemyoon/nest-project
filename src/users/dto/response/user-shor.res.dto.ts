@@ -1,3 +1,5 @@
-// import { PickType } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
 
-// export class UserShorResDto extends PickType(UserShorResDto, ['id', 'name']) {}
+import { UserResBaseDto } from './user-base.res.dto';
+
+export class UserShorResDto extends PickType(UserResBaseDto, ['id', 'name']) {}
