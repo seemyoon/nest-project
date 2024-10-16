@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -17,6 +18,14 @@ async function bootstrap() {
       type: 'http',
     })
     .build();
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   const document = SwaggerModule.createDocument(app, config);
   SwaggerHelper.setDefaultResponses(document);
   SwaggerModule.setup('docs', app, document, {
@@ -28,7 +37,7 @@ async function bootstrap() {
   const host = 'localhost';
   await app.listen(port, () => {
     console.log(`Server is running on http://${host}:${port}`);
-    console.log(`Swagger is running on http://${host}:${port}`);
+    console.log(`Swagger is running on http://${host}:${port}/docs`);
   });
 }
 
