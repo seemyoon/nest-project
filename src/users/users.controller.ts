@@ -17,12 +17,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { CreateReqUserDto } from './dto/request/create-req-user.dto';
-import { UpdateReqUserDto } from './dto/request/update-req-user.dto';
-import { UserListReqDto } from './dto/request/user-list.req.dto';
-import { UserResDto } from './dto/response/user.res.dto';
+import { CreateReqUserDto } from './models/dto/request/create-req-user.dto';
+import { UpdateReqUserDto } from './models/dto/request/update-req-user.dto';
+import { UserListReqDto } from './models/dto/request/user-list.req.dto';
+import { UserResDto } from './models/dto/response/user.res.dto';
 import { UsersService } from './users.service';
-import { UserShorResDto } from './dto/response/user-shor.res.dto';
+import { UserShorResDto } from './models/dto/response/user-shor.res.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users')
