@@ -17,7 +17,7 @@ import {
 
 import { GenderEnum } from '../../enum/gender.enum';
 import { Transform, Type } from 'class-transformer';
-import { TransformHelper } from '../../../../common/helpers/transform.helper';
+import { TransformHelper } from '../../../../../common/helpers/transform.helper';
 
 export class CarsBaseReqDto {
   @Transform(TransformHelper.trim)

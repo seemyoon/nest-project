@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
+import { AppConfig, Config } from '../../config/config.type';
 import { CreateReqUserDto } from './models/dto/request/create-req-user.dto';
 import { UpdateReqUserDto } from './models/dto/request/update-req-user.dto';
 import { UserListReqDto } from './models/dto/request/user-list.req.dto';
@@ -8,10 +10,14 @@ import { UserShorResDto } from './models/dto/response/user-shor.res.dto';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly configService: ConfigService<Config>) {}
+
   public async create(
     createUserDto: CreateReqUserDto,
     query: UserListReqDto,
   ): Promise<UserResDto> {
+    const appConfig = this.configService.get<AppConfig>('database');
+    console.log(appConfig);
     return {} as UserResDto;
   }
 
