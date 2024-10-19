@@ -17,7 +17,7 @@ export class UsersService {
     query: UserListReqDto,
   ): Promise<UserResDto> {
     const appConfig = this.configService.get<AppConfig>('database');
-    console.log(appConfig);
+    // console.log(appConfig);
     return {} as UserResDto;
   }
 

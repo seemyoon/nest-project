@@ -12,7 +12,7 @@ export default (): Config => ({
     port: parseInt(process.env.POSTGRES_PORT, 10) || 5432,
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
-    name: process.env.POSTGRES_DB,
+    database: process.env.POSTGRES_DB,
   },
   redis: {
     host: process.env.REDIS_HOST,
