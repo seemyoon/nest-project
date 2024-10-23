@@ -4,4 +4,6 @@ export enum TableNameEnum {
   REFRESH_TOKENS = 'refresh_tokens',
   TAGS = 'tags',
   USERS = 'users',
+  COMMENTS = 'comments',
+  FOLLOW = 'follow'
 }

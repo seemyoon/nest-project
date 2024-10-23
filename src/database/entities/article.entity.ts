@@ -14,6 +14,7 @@ import { LikesEntity } from './likes.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { TagEntity } from './tag.entity';
 import { UserEntity } from './user.entity';
+import { CommentsEntity } from './comments.entity';
 
 @Entity(TableNameEnum.ARTICLES)
 export class ArticleEntity extends CreateUpdateModel {
@@ -31,6 +32,9 @@ export class ArticleEntity extends CreateUpdateModel {
 
   @OneToMany(() => LikesEntity, (entity) => entity.articles)
   likes?: LikesEntity[];
+
+  @OneToMany(() => CommentsEntity, (entity) => entity.articles)
+  comments?: CommentsEntity[];
 
   @Column()
   user_id: string;

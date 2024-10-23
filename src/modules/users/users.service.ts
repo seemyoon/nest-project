@@ -7,10 +7,14 @@ import { UpdateReqUserDto } from './models/dto/request/update-req-user.dto';
 import { UserListReqDto } from './models/dto/request/user-list.req.dto';
 import { UserResDto } from './models/dto/response/user.res.dto';
 import { UserShorResDto } from './models/dto/response/user-shor.res.dto';
+import { UserRepository } from '../repository/service/user.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly configService: ConfigService<Config>) {}
+  constructor(
+    private readonly configService: ConfigService<Config>,
+    private userRepository: UserRepository,
+  ) {}
 
   public async create(
     createUserDto: CreateReqUserDto,
@@ -21,6 +25,7 @@ export class UsersService {
   }
 
   public findAll() {
+    this.userRepository.find();
     return `This action returns all users`;
   }
 

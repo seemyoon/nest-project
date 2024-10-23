@@ -5,6 +5,8 @@ import { ArticleEntity } from './article.entity';
 import { LikesEntity } from './likes.entity';
 import { CreateUpdateModel } from './models/create-update.model';
 import { RefreshTokenEntity } from './refresh-token.entity';
+import { CommentsEntity } from './comments.entity';
+import { FollowEntity } from './follow.entity';
 
 @Entity(TableNameEnum.USERS)
 export class UserEntity extends CreateUpdateModel {
@@ -29,6 +31,9 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text')
   image: string;
 
+  @OneToMany(() => CommentsEntity, (entity) => entity.user)
+  comments?: CommentsEntity[];
+
   @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
   refreshTokens?: RefreshTokenEntity[];
 
@@ -37,4 +42,10 @@ export class UserEntity extends CreateUpdateModel {
 
   @OneToMany(() => LikesEntity, (entity) => entity.user)
   likes?: LikesEntity[];
+
+  @OneToMany(() => FollowEntity, (entity) => entity.follower_id)
+  follower_id?: CommentsEntity[];
+
+  @OneToMany(() => FollowEntity, (entity) => entity.following_id)
+  following_id?: CommentsEntity[];
 }
