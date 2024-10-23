@@ -1,7 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
-export class User {
+import { TableNameEnum } from '../enums/table-name.enum';
+import { ArticleEntity } from './article.entity';
+import { LikesEntity } from './likes.entity';
+import { CreateUpdateModel } from './models/create-update.model';
+import { RefreshTokenEntity } from './refresh-token.entity';
+
+@Entity(TableNameEnum.USERS)
+export class UserEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -9,14 +15,26 @@ export class User {
   email: string;
 
   @Column('text')
-  firstName: string;
+  name: string;
 
   @Column('text')
-  lastName: string;
+  password: string;
 
   @Column('text')
   isActive: boolean;
 
   @Column('text', { nullable: true })
   isBio: string;
+
+  @Column('text')
+  image: string;
+
+  @OneToMany(() => RefreshTokenEntity, (entity) => entity.user)
+  refreshTokens?: RefreshTokenEntity[];
+
+  @OneToMany(() => ArticleEntity, (entity) => entity.user)
+  articles?: ArticleEntity[];
+
+  @OneToMany(() => LikesEntity, (entity) => entity.user)
+  likes?: LikesEntity[];
 }

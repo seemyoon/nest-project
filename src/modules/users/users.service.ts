@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { AppConfig, Config } from '../../config/config.type';
@@ -17,15 +17,14 @@ export class UsersService {
     query: UserListReqDto,
   ): Promise<UserResDto> {
     const appConfig = this.configService.get<AppConfig>('database');
-    // console.log(appConfig);
     return {} as UserResDto;
   }
 
-  findAll() {
+  public findAll() {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
+  public findOne(id: number) {
     return `This action returns a #${id} user`;
   }
 
@@ -36,7 +35,7 @@ export class UsersService {
     return {} as UserShorResDto;
   }
 
-  remove(id: number) {
+  public remove(id: number) {
     return `This action removes a #${id} user`;
   }
 
