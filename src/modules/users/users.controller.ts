@@ -4,25 +4,13 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
-  Post,
-  Query,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiConflictResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { CreateReqUserDto } from './models/dto/request/create-req-user.dto';
 import { UpdateReqUserDto } from './models/dto/request/update-req-user.dto';
-import { UserListReqDto } from './models/dto/request/user-list.req.dto';
-import { UserResDto } from './models/dto/response/user.res.dto';
-import { UserShorResDto } from './models/dto/response/user-shor.res.dto';
-import { UsersService } from './users.service';
+import { UsersService } from './services/users.service';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -30,23 +18,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiConflictResponse({ description: 'Conflict' })
-  @ApiOperation({ summary: 'Create user', description: 'Create a new user' })
-  @Post()
-  public async create(
-    @Body() createUserDto: CreateReqUserDto,
-    @Query() query: UserListReqDto,
-  ): Promise<UserResDto> {
-    return await this.usersService.create(createUserDto, query);
-  }
-
-  @Get()
-  findAll(@Query() query: UserListReqDto) {
-    return this.usersService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: ParseUUIDPipe) {
     return this.usersService.findOne(+id);
   }
 

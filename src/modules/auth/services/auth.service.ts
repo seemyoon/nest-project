@@ -1,0 +1,58 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+
+import { RefreshTokenRepository } from '../../repository/service/refresh-token.repository';
+import { UserRepository } from '../../repository/service/user.repository';
+import { UserMapper } from '../../users/services/user.mapper';
+import { SignInReqDto } from '../models/dto/request/sign-in.req.dto';
+import { SignUpReqDto } from '../models/dto/request/sign-up.req.dto';
+import { AuthResDto } from '../models/dto/response/auth.res.dto';
+import { AuthCacheService } from './auth-cache.service';
+import { TokenService } from './token.service';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly authCacheService: AuthCacheService,
+    private readonly tokenService: TokenService,
+    private readonly userRepository: UserRepository,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
+  ) {}
+
+  public async signUp(dto: SignInReqDto): Promise<AuthResDto> {
+    await this.isEmailNotExistOrThrow(dto.email);
+    const password = await bcrypt.hash(dto.password, 10);
+    const user = await this.userRepository.save(
+      this.userRepository.create({ ...dto, password }),
+    );
+    const tokens = await this.tokenService.generateAuthTokens({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+
+    await Promise.all([
+      this.authCacheService.saveToken(
+        tokens.accessToken,
+        user.id,
+        dto.deviceId,
+      ),
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          deviceId: dto.deviceId,
+          user_id: user.id,
+          refreshToken: tokens.refreshToken,
+        }),
+      ),
+    ]);
+    return { user: UserMapper.toResDto(user), tokens };
+  }
+
+  public async signIn(dto: SignUpReqDto): Promise<any> {}
+
+  private async isEmailNotExistOrThrow(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+    if (user) {
+      throw new BadRequestException('User with this email already exists');
+    }
+  }
+}

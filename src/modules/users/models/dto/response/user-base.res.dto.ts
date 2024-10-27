@@ -1,14 +1,8 @@
-import { CarsBaseReqDto } from '../request/user-base.req.dto';
-
 export class UserResBaseDto {
   id: string;
-  name: number;
-  age?: number;
+  name: string;
+  bio: string;
+  image: string;
   email: string;
-  phone: string;
-  gender: string;
-  isStudent: string;
-  cars: CarsBaseReqDto[];
-  created_at: Date;
-  updated_at: Date;
+  password: string;
 }

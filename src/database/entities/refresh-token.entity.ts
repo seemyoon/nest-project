@@ -6,19 +6,19 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { TableNameEnum } from '../enums/table-name.enum';
 import { CreateUpdateModel } from './models/create-update.model';
 import { UserEntity } from './user.entity';
-import { TableNameEnum } from '../enums/table-name.enum';
 
 @Entity(TableNameEnum.REFRESH_TOKENS)
 export class RefreshTokenEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('text')
   refreshToken: string;
 
-  @Column()
+  @Column('text')
   deviceId: string;
 
   @Column()
