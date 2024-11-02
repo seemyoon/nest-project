@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { RefreshTokenRepository } from '../../repository/service/refresh-token.repository';
@@ -19,7 +23,7 @@ export class AuthService {
     private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
-  public async signUp(dto: SignInReqDto): Promise<AuthResDto> {
+  public async signUp(dto: SignUpReqDto): Promise<AuthResDto> {
     await this.isEmailNotExistOrThrow(dto.email);
     const password = await bcrypt.hash(dto.password, 10);
     const user = await this.userRepository.save(
@@ -29,7 +33,6 @@ export class AuthService {
       userId: user.id,
       deviceId: dto.deviceId,
     });
-
     await Promise.all([
       this.authCacheService.saveToken(
         tokens.accessToken,
@@ -38,21 +41,56 @@ export class AuthService {
       ),
       this.refreshTokenRepository.save(
         this.refreshTokenRepository.create({
-          deviceId: dto.deviceId,
           user_id: user.id,
+          deviceId: dto.deviceId,
           refreshToken: tokens.refreshToken,
         }),
       ),
     ]);
+
     return { user: UserMapper.toResDto(user), tokens };
   }
 
-  public async signIn(dto: SignUpReqDto): Promise<any> {}
+  public async signIn(dto: SignInReqDto): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+      select: ['id', 'password'],
+    });
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
+
+    const tokens = await this.tokenService.generateAuthTokens({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+    await Promise.all([
+      this.authCacheService.saveToken(
+        tokens.accessToken,
+        user.id,
+        dto.deviceId,
+      ),
+      this.refreshTokenRepository.save(
+        this.refreshTokenRepository.create({
+          user_id: user.id,
+          deviceId: dto.deviceId,
+          refreshToken: tokens.refreshToken,
+        }),
+      ),
+    ]);
+    const userEntity = await this.userRepository.findOneBy({ id: user.id });
+
+    return { user: UserMapper.toResDto(userEntity), tokens };
+  }
 
   private async isEmailNotExistOrThrow(email: string) {
     const user = await this.userRepository.findOneBy({ email });
     if (user) {
-      throw new BadRequestException('User with this email already exists');
+      throw new BadRequestException('Email already exists');
     }
   }
 }

@@ -6,30 +6,43 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
+import { UserID } from '../../common/types/entity-ids.type';
 import { UpdateReqUserDto } from './models/dto/request/update-req-user.dto';
 import { UsersService } from './services/users.service';
 
-@ApiBearerAuth()
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':id')
-  findOne(@Param('id') id: ParseUUIDPipe) {
-    return this.usersService.findOne(+id);
+  @ApiBearerAuth()
+  @Get('me')
+  public async findMe() {
+    return await this.usersService.findMe();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateReqUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @ApiBearerAuth()
+  @Patch('me')
+  public async updateMe(
+    @Req() req: Request,
+    @Body() updateUserDto: UpdateReqUserDto,
+  ) {
+    return await this.usersService.updateMe(req.res.locals.user, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @ApiBearerAuth()
+  @Delete('me')
+  public async deleteMe() {
+    return await this.usersService.deleteMe();
+  }
+
+  @Get(':userId')
+  public async findOne(@Param('userId', ParseUUIDPipe) userId: UserID) {
+    return await this.usersService.findUser();
   }
 }

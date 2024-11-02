@@ -7,15 +7,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { FollowID } from '../../common/types/entity-ids.type';
 import { TableNameEnum } from '../enums/table-name.enum';
-import { ArticleEntity } from './article.entity';
-import { CreateUpdateModel } from './models/create-update.model';
 import { UserEntity } from './user.entity';
 
 @Entity(TableNameEnum.FOLLOW)
 export class FollowEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: FollowID;
 
   @CreateDateColumn()
   created: Date;

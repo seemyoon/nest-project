@@ -1,39 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { UserID } from '../../../common/types/entity-ids.type';
 import { Config } from '../../../config/config.type';
+import { UserEntity } from '../../../database/entities/user.entity';
 import { UserRepository } from '../../repository/service/user.repository';
 import { UpdateReqUserDto } from '../models/dto/request/update-req-user.dto';
-import { UserShortResDto } from '../models/dto/response/user-short-res.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly configService: ConfigService<Config>,
-    private userRepository: UserRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
-  public findAll() {
-    this.userRepository.find();
-    return `This action returns all users`;
+  public async findMe() {
+    return `This action returns a #${1} user`;
   }
 
-  public findOne(id: number) {
-    return `This action returns a #${id} user`;
+  public async updateMe(userData: UserEntity, dto: UpdateReqUserDto) {
+    return `This action updates a #${userData.id} user`;
   }
 
-  public async update(
-    id: number,
-    updateUserDto: UpdateReqUserDto,
-  ): Promise<UserShortResDto> {
-    return {} as UserShortResDto;
+  public async deleteMe(userId: UserID) {
+    return `This action delete a #${userId} user`;
   }
 
-  public remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  public async checkAbilityToEditArticle(userId: string, articleId: string) {
-    // check if the user access to edit the article
+  public async findUser(userId: UserID) {
+    return `This action returns a #${userId} user`;
   }
 }

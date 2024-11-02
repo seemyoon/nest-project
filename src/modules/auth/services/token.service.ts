@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 import { Config, JwtConfig } from '../../../config/config.type';
 import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 import { ITokenPair } from '../interfaces/token-pair.interface';
+import { TokenType } from '../models/enums/token-type.enum';
 
 @Injectable()
 export class TokenService {
@@ -29,7 +30,31 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  public async verifyAuthTokens(token: string): Promise<any> {
-    return await this.jwtService.verifyAsync(token);
+  public async verifyAuthTokens(
+    token: string,
+    type: TokenType,
+  ): Promise<IJwtPayload> {
+    try {
+      return await this.jwtService.verifyAsync(token, {
+        secret: this.getSecret(type),
+      });
+    } catch (e) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  public getSecret(type: TokenType): string {
+    let secret: string;
+    switch (type) {
+      case TokenType.ACCESS:
+        secret = this.jwtConfig.accessSecret;
+        break;
+      case TokenType.REFRESH:
+        secret = this.jwtConfig.refreshSecret;
+        break;
+      default:
+        throw new Error('Unknown token type');
+    }
+    return secret;
   }
 }
