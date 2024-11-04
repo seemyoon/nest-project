@@ -22,7 +22,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @Get('me')
-  public async findMe(@CurrentUser() userData: any) {
+  public async findMe(@CurrentUser() userData: IUserData) {
     return await this.usersService.findMe(userData);
   }
 

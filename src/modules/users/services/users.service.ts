@@ -16,18 +16,18 @@ export class UsersService {
   ) {}
 
   public async findMe(userData: IUserData) {
-    return `This action returns a #${userData.userid} user`;
+    return `This action returns a #${userData.userId} user in method findMe`;
   }
 
   public async updateMe(userData: IUserData, dto: UpdateReqUserDto) {
-    return `This action updates a #${userData.userid} user`;
+    return `This action updates a #${userData.userId} user`;
   }
 
   public async deleteMe(userData: IUserData) {
-    return `This action delete a #${userData.userid} user`;
+    return `This action delete a #${userData.userId} user`;
   }
 
   public async findUser(userId: UserID) {
-    return `This action returns a #${userId} user`;
+    return `This action returns a #${userId} user in method findUser `;
   }
 }

@@ -1,7 +1,7 @@
 import { UserID } from '../../../common/types/entity-ids.type';
 
 export interface IUserData {
-  userid: UserID;
+  userId: UserID;
   deviceId: string;
   email: string;
 }
