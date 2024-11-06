@@ -29,6 +29,9 @@ export class UserEntity extends CreateUpdateModel {
   @Column('text', { nullable: true })
   image: string;
 
+  @Column('timestamp', { nullable: true })
+  delete: Date;
+
   @OneToMany(() => CommentsEntity, (entity) => entity.user)
   comments?: CommentsEntity[];
 

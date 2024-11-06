@@ -26,13 +26,17 @@ export class CommentsEntity extends CreateUpdateModel {
 
   @Column()
   user_id: UserID;
-  @ManyToOne(() => UserEntity, (entity) => entity.comments)
+  @ManyToOne(() => UserEntity, (entity) => entity.comments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
 
   @Column()
   article_id: ArticleID;
-  @ManyToOne(() => ArticleEntity, (entity) => entity.comments)
+  @ManyToOne(() => ArticleEntity, (entity) => entity.comments, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'articles_id' })
   articles?: ArticleEntity;
 }

@@ -7,11 +7,16 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { ArticlesService } from './articles.service';
+import { ArticleID } from '../../common/types/entity-ids.type';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { IUserData } from '../auth/interfaces/user-data.interface';
+import { ArticleResDto } from './dto/article.res.dto';
 import { CreateArticleReqDto } from './dto/create-article.req.dto';
 import { UpdateArticleReqDto } from './dto/update-article.req.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ArticleMapper } from './services/article.mapper';
+import { ArticlesService } from './services/articles.service';
 
 @ApiBearerAuth()
 @ApiTags('Articles')
@@ -20,27 +25,30 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
-  create(@Body() createArticleDto: CreateArticleReqDto) {
-    return this.articlesService.create(createArticleDto);
+  public async create(
+    @CurrentUser() userData: IUserData,
+    @Body() dto: CreateArticleReqDto,
+  ): Promise<ArticleResDto> {
+    return ArticleMapper.toResDto(
+      await this.articlesService.create(userData, dto),
+    );
   }
 
-  @Get()
-  findAll() {
-    return this.articlesService.findAll();
+  @Get(':articleId')
+  public async findOne(@Param('articleId') articleId: ArticleID) {
+    return ArticleMapper.toResDto(
+      await this.articlesService.findOne(articleId),
+    );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleReqDto) {
-    return this.articlesService.update(+id, updateArticleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.articlesService.remove(+id);
+  @Patch(':articleId')
+  public async update(
+    @CurrentUser() userData: IUserData,
+    @Param('articleId') articleId: ArticleID,
+    @Body() dto: UpdateArticleReqDto,
+  ) {
+    return ArticleMapper.toResDto(
+      await this.articlesService.update(userData, articleId, dto),
+    );
   }
 }

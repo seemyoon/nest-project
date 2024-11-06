@@ -100,12 +100,12 @@ export class AuthService {
   }
 
   public async refresh(userData: IUserData): Promise<TokenPairResDto> {
-    const user = await this.userRepository.findOne({
-      where: { email: userData.email },
-    });
-    if (!user) {
-      throw new UnauthorizedException();
-    }
+    // const user = await this.userRepository.findOne({
+    //   where: { email: userData.email },
+    // });
+    // if (!user) {
+    //   throw new UnauthorizedException();
+    // }
     await Promise.all([
       this.authCacheService.deleteToken(userData.userId, userData.deviceId),
       this.refreshTokenRepository.delete({

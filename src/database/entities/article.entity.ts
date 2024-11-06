@@ -39,11 +39,13 @@ export class ArticleEntity extends CreateUpdateModel {
 
   @Column()
   user_id: UserID;
-  @ManyToOne(() => UserEntity, (entity) => entity.articles)
+  @ManyToOne(() => UserEntity, (entity) => entity.articles, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
 
   @ManyToMany(() => TagEntity, (entity) => entity.articles)
   @JoinTable()
-  tag?: TagEntity[];
+  tags?: TagEntity[];
 }
