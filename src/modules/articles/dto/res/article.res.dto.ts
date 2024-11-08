@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { TagEntity } from '../../../database/entities/tag.entity';
-import { UserResDto } from '../../users/models/dto/response/user.res.dto';
+import { ArticleID } from '../../../../common/types/entity-ids.type';
+import { UserResDto } from '../../../users/models/dto/response/user.res.dto';
 
 export class ArticleResDto {
   @ApiProperty({
     example: '6744s24-5a28-a363-a5e1-023ae2e4780f',
     description: 'Article ID',
   })
-  id: string;
+  id: ArticleID;
 
   @ApiProperty({
     example: 'Article Title',

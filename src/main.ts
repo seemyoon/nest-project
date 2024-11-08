@@ -32,6 +32,7 @@ async function bootstrap() {
   SwaggerHelper.setDefaultResponses(document);
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
+      docExpansion: 'none',
       persistAuthorization: true,
     },
   });

@@ -7,14 +7,17 @@ import { TagEntity } from '../../../database/entities/tag.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/service/article.repository';
 import { TagRepository } from '../../repository/service/tag.repository';
-import { CreateArticleReqDto } from '../dto/create-article.req.dto';
-import { UpdateArticleReqDto } from '../dto/update-article.req.dto';
+import { UserRepository } from '../../repository/service/user.repository';
+import { CreateArticleReqDto } from '../dto/req/create-article.req.dto';
+import { ListArticleQueryDto } from '../dto/req/list-article.query.dto';
+import { UpdateArticleReqDto } from '../dto/req/update-article.req.dto';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     private readonly tagRepository: TagRepository,
     private readonly articleRepository: ArticleRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   public async create(
@@ -31,12 +34,31 @@ export class ArticlesService {
     return {} as any;
   }
 
+  public async findAll(
+    userData: IUserData,
+    query: ListArticleQueryDto,
+  ): Promise<[ArticleEntity[], number]> {
+    return await this.articleRepository.findAll(userData, query);
+  }
+
   public async update(
     userData: IUserData,
     articleId: ArticleID,
     dto: UpdateArticleReqDto,
   ): Promise<ArticleEntity> {
-    return {} as any;
+    await this.articleRepository.update(
+      { id: articleId, user_id: userData.userId },
+      {
+        title: dto.title,
+        description: dto.description,
+        body: dto.body,
+      },
+    );
+
+    return await this.articleRepository.findOne({
+      where: { id: articleId },
+      relations: ['tags', 'user'],
+    });
   }
 
   private async createTags(tags: string[]): Promise<TagEntity[]> {

@@ -49,17 +49,19 @@ export class UsersService {
       throw new ConflictException("You can't unfollow yourself");
     }
     await this.isUserExistOrThrow(userId);
-    const follow = await this.followRepository.save({
+    const follow = await this.followRepository.findOneBy({
       follower_id: userData.userId,
       following_id: userId,
     });
-    if (!follow) {
-      throw new ConflictException("You don't follow this user");
+    if (follow) {
+      throw new ConflictException('You followed this user');
     }
-    await this.followRepository.delete({
-      follower_id: userData.userId,
-      following_id: userId,
-    });
+    await this.followRepository.save(
+      this.followRepository.create({
+        follower_id: userData.userId,
+        following_id: userId,
+      }),
+    );
   }
 
   public async unfollow(userId: UserID, userData: IUserData): Promise<void> {

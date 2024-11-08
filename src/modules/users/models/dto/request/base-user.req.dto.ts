@@ -28,7 +28,7 @@ export class BaseUserReqDto {
   @Length(0, 3000)
   image?: string;
 
-  @ApiProperty({ example: 'test@gmail.com' })
+  @ApiProperty({ example: 'alexandrsemenec01@gmail.com' })
   @IsString()
   @Length(0, 300)
   @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)

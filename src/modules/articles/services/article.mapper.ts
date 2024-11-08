@@ -1,6 +1,8 @@
 import { ArticleEntity } from '../../../database/entities/article.entity';
 import { UserMapper } from '../../users/services/user.mapper';
-import { ArticleResDto } from '../dto/article.res.dto';
+import { ListArticleQueryDto } from '../dto/req/list-article.query.dto';
+import { ArticleResDto } from '../dto/res/article.res.dto';
+import { ArticleListResDto } from '../dto/res/article-list.res.dto';
 
 export class ArticleMapper {
   public static toResDto(data: ArticleEntity): ArticleResDto {
@@ -14,5 +16,13 @@ export class ArticleMapper {
       tags: data.tags ? data.tags.map((tag) => tag.name) : [],
       user: data.user ? UserMapper.toResDto(data.user) : null,
     };
+  }
+
+  public static toResDtoList(
+    entities: ArticleEntity[],
+    quantity: number,
+    query: ListArticleQueryDto,
+  ): ArticleListResDto {
+    return { entities: entities.map(this.toResDto), quantity, ...query };
   }
 }
