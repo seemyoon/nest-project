@@ -7,7 +7,6 @@ import { TagEntity } from '../../../database/entities/tag.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/service/article.repository';
 import { TagRepository } from '../../repository/service/tag.repository';
-import { UserRepository } from '../../repository/service/user.repository';
 import { CreateArticleReqDto } from '../dto/req/create-article.req.dto';
 import { ListArticleQueryDto } from '../dto/req/list-article.query.dto';
 import { UpdateArticleReqDto } from '../dto/req/update-article.req.dto';
@@ -17,7 +16,6 @@ export class ArticlesService {
   constructor(
     private readonly tagRepository: TagRepository,
     private readonly articleRepository: ArticleRepository,
-    private readonly userRepository: UserRepository,
   ) {}
 
   public async create(
@@ -30,8 +28,11 @@ export class ArticlesService {
     );
   }
 
-  public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
-    return {} as any;
+  public async findOne(
+    userData: IUserData,
+    articleId: ArticleID,
+  ): Promise<ArticleEntity> {
+    return await this.articleRepository.findByArticleId(userData, articleId);
   }
 
   public async findAll(

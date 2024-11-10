@@ -31,10 +31,10 @@ export class ArticleEntity extends CreateUpdateModel {
   @Column('text', { nullable: true })
   body?: string;
 
-  @OneToMany(() => LikesEntity, (entity) => entity.articles)
+  @OneToMany(() => LikesEntity, (entity) => entity.article)
   likes?: LikesEntity[];
 
-  @OneToMany(() => CommentsEntity, (entity) => entity.articles)
+  @OneToMany(() => CommentsEntity, (entity) => entity.article)
   comments?: CommentsEntity[];
 
   @Column()
@@ -46,6 +46,6 @@ export class ArticleEntity extends CreateUpdateModel {
   user?: UserEntity;
 
   @ManyToMany(() => TagEntity, (entity) => entity.articles)
-  @JoinTable()
   tags?: TagEntity[];
+  // @JoinTable()
 }

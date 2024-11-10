@@ -38,5 +38,5 @@ export class CommentsEntity extends CreateUpdateModel {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'articles_id' })
-  articles?: ArticleEntity;
+  article?: ArticleEntity;
 }

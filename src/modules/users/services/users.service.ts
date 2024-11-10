@@ -1,10 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 import { UserID } from '../../../common/types/entity-ids.type';
-import { Config } from '../../../config/config.type';
 import { UserEntity } from '../../../database/entities/user.entity';
 import { IUserData } from '../../auth/interfaces/user-data.interface';
+import { FileTypeEnum } from '../../file-storage/enum/file-type.enum';
+import { FileStorageService } from '../../file-storage/services/file-storage.service';
 import { FollowRepository } from '../../repository/service/follow.repository';
 import { RefreshTokenRepository } from '../../repository/service/refresh-token.repository';
 import { UserRepository } from '../../repository/service/user.repository';
@@ -13,7 +13,7 @@ import { UpdateReqUserDto } from '../models/dto/request/update-req-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly configService: ConfigService<Config>,
+    private readonly fileStorageService: FileStorageService,
     private readonly userRepository: UserRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly followRepository: FollowRepository,
@@ -35,9 +35,33 @@ export class UsersService {
   public async deleteMe(userData: IUserData): Promise<void> {
     await this.userRepository.update(
       { id: userData.userId },
-      { delete: new Date() },
+      { deleted: new Date() },
     );
     await this.refreshTokenRepository.delete({ user_id: userData.userId });
+  }
+
+  public async uploadAvatar(
+    userData: IUserData,
+    file: Express.Multer.File,
+  ): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userData.userId });
+    const filePath = await this.fileStorageService.uploadFile(
+      file,
+      FileTypeEnum.IMAGE,
+      userData.userId,
+    );
+    if (user.image) {
+      await this.fileStorageService.deleteFile(user.image);
+    }
+    await this.userRepository.save({ ...user, image: filePath });
+  }
+
+  public async deleteAvatar(userData: IUserData): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userData.userId });
+    if (user.image) {
+      await this.fileStorageService.deleteFile(user.image);
+      await this.userRepository.save({ ...user, image: null });
+    }
   }
 
   public async findUser(userId: UserID): Promise<UserEntity> {

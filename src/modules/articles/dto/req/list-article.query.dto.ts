@@ -5,9 +5,9 @@ import { TransformHelper } from '../../../../common/helpers/transform.helper';
 
 export class ListArticleQueryDto {
   @Type(() => Number)
+  @IsInt()
   @Max(100)
   @Min(1)
-  @IsInt()
   @IsOptional()
   limit?: number = 10;
 
@@ -23,7 +23,6 @@ export class ListArticleQueryDto {
   @IsString()
   search?: string;
 
-  @Transform(TransformHelper.trim)
   @IsOptional()
   @IsString()
   tag?: string;

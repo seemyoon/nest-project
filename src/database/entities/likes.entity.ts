@@ -30,5 +30,5 @@ export class LikesEntity {
   article_id: ArticleID;
   @ManyToOne(() => ArticleEntity, (entity) => entity.likes)
   @JoinColumn({ name: 'articles_id' })
-  articles?: ArticleEntity;
+  article?: ArticleEntity;
 }

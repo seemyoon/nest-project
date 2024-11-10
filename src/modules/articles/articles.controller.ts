@@ -37,10 +37,11 @@ export class ArticlesController {
 
   @Get(':articleId')
   public async findOne(
+    @CurrentUser() userData: IUserData,
     @Param('articleId') articleId: ArticleID,
   ): Promise<ArticleResDto> {
     return ArticleMapper.toResDto(
-      await this.articlesService.findOne(articleId),
+      await this.articlesService.findOne(userData, articleId),
     );
   }
 

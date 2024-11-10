@@ -45,6 +45,9 @@ async function bootstrap() {
     console.log(
       `Swagger is running on http://${appConfig.host}:${appConfig.port}/docs`,
     );
+    console.log(
+      `Minio Object Store is running on http://${appConfig.host}:8001/browser`,
+    );
   });
 }
 

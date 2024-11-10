@@ -1,9 +1,12 @@
+import { Injectable } from '@nestjs/common';
+
 import { ArticleEntity } from '../../../database/entities/article.entity';
 import { UserMapper } from '../../users/services/user.mapper';
 import { ListArticleQueryDto } from '../dto/req/list-article.query.dto';
 import { ArticleResDto } from '../dto/res/article.res.dto';
 import { ArticleListResDto } from '../dto/res/article-list.res.dto';
 
+@Injectable()
 export class ArticleMapper {
   public static toResDto(data: ArticleEntity): ArticleResDto {
     return {
@@ -19,10 +22,10 @@ export class ArticleMapper {
   }
 
   public static toResDtoList(
-    entities: ArticleEntity[],
-    quantity: number,
+    data: ArticleEntity[],
+    total: number,
     query: ListArticleQueryDto,
   ): ArticleListResDto {
-    return { entities: entities.map(this.toResDto), quantity, ...query };
+    return { data: data.map(this.toResDto), total, ...query };
   }
 }

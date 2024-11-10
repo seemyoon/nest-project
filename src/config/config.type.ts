@@ -1,3 +1,5 @@
+import { ObjectCannedACL } from '@aws-sdk/client-s3';
+
 export type Config = {
   app: AppConfig;
   database: DatabaseConfig;
@@ -26,6 +28,10 @@ export type RedisConfig = {
 export type AWSConfig = {
   accessKey: string;
   secretKey: string;
+  region: string;
+  bucket_name: string;
+  ACL: ObjectCannedACL;
+  endpoint: string;
 };
 export type SentryConfig = {
   dsn: string;

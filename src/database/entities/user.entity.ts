@@ -30,7 +30,7 @@ export class UserEntity extends CreateUpdateModel {
   image: string;
 
   @Column('timestamp', { nullable: true })
-  delete: Date;
+  deleted?: Date;
 
   @OneToMany(() => CommentsEntity, (entity) => entity.user)
   comments?: CommentsEntity[];
@@ -44,9 +44,9 @@ export class UserEntity extends CreateUpdateModel {
   @OneToMany(() => LikesEntity, (entity) => entity.user)
   likes?: LikesEntity[];
 
-  @OneToMany(() => FollowEntity, (entity) => entity.follower_id)
-  follower_id?: CommentsEntity[];
+  @OneToMany(() => FollowEntity, (entity) => entity.follower)
+  followers?: CommentsEntity[];
 
-  @OneToMany(() => FollowEntity, (entity) => entity.following_id)
-  following_id?: CommentsEntity[];
+  @OneToMany(() => FollowEntity, (entity) => entity.following)
+  followings?: CommentsEntity[];
 }

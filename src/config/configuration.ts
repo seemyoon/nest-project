@@ -1,5 +1,7 @@
 import * as process from 'node:process';
 
+import { ObjectCannedACL } from '@aws-sdk/client-s3';
+
 import { Config } from './config.type';
 
 export default (): Config => ({
@@ -22,6 +24,10 @@ export default (): Config => ({
   aws: {
     accessKey: process.env.AWS_ACCESS_KEY,
     secretKey: process.env.AWS_SECRET_KEY,
+    region: process.env.AWS_S3_REGION,
+    bucket_name: process.env.AWS_S3_BUCKET_NAME,
+    ACL: process.env.AWS_S3_ACL as ObjectCannedACL,
+    endpoint: process.env.AWS_S3_ENDPOINT,
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,

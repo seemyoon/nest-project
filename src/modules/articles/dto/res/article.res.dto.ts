@@ -23,7 +23,7 @@ export class ArticleResDto {
   description: string;
 
   @ApiProperty({
-    example: 'Body Description',
+    example: 'Article Body',
     description: 'Body Description',
   })
   body: string;

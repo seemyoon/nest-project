@@ -5,11 +5,12 @@ import { UserResDto } from '../models/dto/response/user.res.dto';
 export class UserMapper {
   public static toResDto(user: UserEntity): UserResDto {
     return {
+      id: user.id,
       email: user.email,
       name: user.name,
-      password: user.password,
       bio: user.bio,
-      image: user.image,
+      image: `${user.image}`,
+      isFollowed: user.followings?.length > 0 || false,
     };
   }
 
