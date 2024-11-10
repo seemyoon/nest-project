@@ -16,6 +16,7 @@ export class ArticleMapper {
       body: data.body,
       created: data.created,
       updated: data.updated,
+      isLiked: data.likes?.length >= 0,
       tags: data.tags ? data.tags.map((tag) => tag.name) : [],
       user: data.user ? UserMapper.toResDto(data.user) : null,
     };

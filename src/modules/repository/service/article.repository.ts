@@ -24,7 +24,7 @@ export class ArticleRepository extends Repository<ArticleEntity> {
       'following',
       'following.follower_id = :userId',
     );
-    // qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
     qb.setParameter('userId', userData.userId);
 
     if (query.search) {
@@ -52,9 +52,10 @@ export class ArticleRepository extends Repository<ArticleEntity> {
       'following',
       'following.follower_id = :userId',
     );
-    // qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
+    qb.leftJoinAndSelect('article.likes', 'like', 'like.user_id = :userId');
     qb.setParameter('userId', userData.userId);
 
+    qb.where('article.id = :articleId', { articleId });
     return await qb.getOne();
   }
 }

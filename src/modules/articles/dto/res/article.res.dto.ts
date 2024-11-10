@@ -46,5 +46,7 @@ export class ArticleResDto {
   })
   tags: string[];
 
+  isLiked: boolean;
+
   user?: UserResDto;
 }
